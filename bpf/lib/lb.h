@@ -902,6 +902,7 @@ update_state:
 	tuple->flags = flags;
 	state->rev_nat_index = svc->rev_nat_index;
 	ipv6_addr_copy(&new_daddr, &backend->address);
+	ipv6_addr_copy(&tuple->daddr, &backend->address);
 
 #ifdef ENABLE_SESSION_AFFINITY
 	if (lb6_svc_is_affinity(svc))
@@ -915,10 +916,7 @@ update_state:
 		ipv6_addr_copy(&new_saddr, &loopback_addr);
 		state->loopback = 1;
 	}
-
-	if(!state->loopback)
 #endif
-		ipv6_addr_copy(&tuple->daddr, &backend->address);
 
 	return lb6_xlate(ctx, &new_daddr, &new_saddr, &tuple->saddr,
 			tuple->nexthdr, l3_off, l4_off,
